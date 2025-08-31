@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: temporal
+    env: docker
+    plan: free
+    envVars:
+      - key: DB
+        value: sqlite
+      - key: PORT
+        value: 7233
