@@ -4,7 +4,5 @@ services:
     env: docker
     plan: free
     envVars:
-      - key: DB
-        value: sqlite
       - key: PORT
         value: 7233

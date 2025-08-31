@@ -1,7 +1,5 @@
-FROM temporalio/auto-setup:latest
+FROM temporalio/server:latest
 
-# Force Temporal to use SQLite instead of Cassandra/Postgres
-ENV DB=sqlite
 EXPOSE 7233
 
-CMD ["temporal-server", "start-dev", "--ip", "0.0.0.0"]
+CMD ["temporal", "server", "start-dev", "--ip", "0.0.0.0"]
