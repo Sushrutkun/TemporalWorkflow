@@ -1,13 +1,16 @@
 FROM debian:bullseye-slim
 
-# Install curl + unzip
+# Install dependencies
 RUN apt-get update && apt-get install -y curl ca-certificates unzip && rm -rf /var/lib/apt/lists/*
 
-# Install Temporal CLI (includes temporal server)
-RUN curl -sSfL https://temporal.download/cli.sh | sh
+# Install Temporal CLI into /usr/local/bin
+RUN curl -sSfL https://temporal.download/cli.sh | sh \
+    && mv /root/.temporalio/bin/temporal /usr/local/bin/temporal
 
-# Expose Temporal gRPC port
-EXPOSE 7233
+# Verify install
+RUN temporal --version
 
-# Run Temporal in dev mode (SQLite, no external DB)
+EXPOSE 8233
+
+# Start Temporal dev server (uses SQLite)
 CMD ["temporal", "server", "start-dev", "--ip", "0.0.0.0"]
