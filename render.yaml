@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: temporal
+    name: temporal-dev
     env: docker
     plan: free
     envVars:
