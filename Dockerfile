@@ -1,15 +1,23 @@
-FROM debian:bullseye-slim
+FROM python:3.10-slim
 
-# Install dependencies
-RUN apt-get update && apt-get install -y curl ca-certificates unzip && rm -rf /var/lib/apt/lists/*
-
-# Install Temporal CLI into /usr/local/bin
+# Install Temporal CLI
+RUN apt-get update && apt-get install -y curl unzip ca-certificates && rm -rf /var/lib/apt/lists/*
 RUN curl -sSfL https://temporal.download/cli.sh | sh \
     && mv /root/.temporalio/bin/temporal /usr/local/bin/temporal
 
-# Verify install
-RUN temporal --version
+# Install Python dependencies
+COPY requirement.txt .
+RUN pip install --no-cache-dir -r requirement.txt
 
-EXPOSE 8233
-CMD ["temporal", "server", "start-dev", "--ip", "0.0.0.0"]
+# Copy your repo code
+COPY . /app
+WORKDIR /app
+ENV PYTHONPATH=/app
 
+# Copy startup script
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
+EXPOSE 7233 8233
+
+CMD ["/start.sh"]

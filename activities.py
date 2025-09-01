@@ -4,16 +4,16 @@ import logging
 
 from temporalio import activity
 
-from temporal_workflow.constants import last_msg_id, dot_aware_channel
-from temporal_workflow.fetch_channel_messages import fetch_channel_messages
-from temporal_workflow.helper import (
+from constants import last_msg_id, dot_aware_channel
+from fetch_channel_messages import fetch_channel_messages
+from helper import (
     create_gemini_prompt,
     call_gemini_api,
     parse_gemini_response,
     write_structured_output,
     get_new_last_msg_id, call_add_job_api, filter_latest_msgs,
 )
-from temporal_workflow.mongo_client import get_mongo_client
+from mongo_client import get_mongo_client
 
 logging.basicConfig(level=logging.INFO)
 
