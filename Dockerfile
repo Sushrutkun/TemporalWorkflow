@@ -11,6 +11,5 @@ RUN curl -sSfL https://temporal.download/cli.sh | sh \
 RUN temporal --version
 
 EXPOSE 8233
-
-# Start Temporal dev server (uses SQLite)
 CMD ["temporal", "server", "start-dev", "--ip", "0.0.0.0"]
+

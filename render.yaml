@@ -1,8 +1,8 @@
 services:
   - type: web
-    name: temporal-dev
+    name: temporal-ui
     env: docker
     plan: free
     envVars:
       - key: PORT
-        value: 7233
+        value: 8233

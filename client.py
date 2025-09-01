@@ -16,7 +16,7 @@ from temporalio.client import Schedule, ScheduleSpec, ScheduleActionStartWorkflo
 
 
 async def main():
-    client = await Client.connect("localhost:7233")
+    client = await Client.connect("temporalworkflow.onrender.com:7233")
 
     # Create or update a schedule
     await client.create_schedule(
