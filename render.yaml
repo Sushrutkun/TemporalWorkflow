@@ -15,7 +15,7 @@ services:
     startCommand: python workflow.py
     envVars:
       - key: TEMPORAL_SERVER
-        value: temporal-server.onrender.com:7233
+        value: temporalworkflow.onrender.com:7233
     runtime: python
 
   - type: worker
@@ -25,5 +25,5 @@ services:
     startCommand: python client.py
     envVars:
       - key: TEMPORAL_SERVER
-        value: temporal-server.onrender.com:7233
+        value: temporalworkflow.onrender.com:7233
     runtime: python
