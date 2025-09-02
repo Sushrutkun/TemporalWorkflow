@@ -21,7 +21,7 @@ def parse_args():
 
 @workflow.defn
 class HyreMeWorkflow:
-    print("🚀 worker started")
+    print("🚀 workflow started")
     @workflow.run
     async def run(self) -> list:
         data = await workflow.execute_activity(

@@ -25,21 +25,19 @@ async def main():
         )
         print("✅ Connected to Temporal server")
         
-        # Your workflow execution code here
-        # Example:
-        # result = await client.execute_workflow(
-        #     "YourWorkflow",
-        #     id="your-workflow-id",
-        #     task_queue="your-task-queue",
-        # )
-        # print("Workflow result:", result)
+        # Execute the workflow immediately
+        print("🔄 Starting HyreMeWorkflow...")
+        result = await client.execute_workflow(
+            "HyreMeWorkflow",
+            id="HyreMeWorkflow-execution-" + str(int(asyncio.get_event_loop().time())),
+            task_queue="HyreMeWorkflow-task-queue",
+        )
+        print(f"✅ Workflow completed with result: {result}")
         
-    except Exception as e:
-        print(f"❌ Error: {e}")
-        raise
-        client = await Client.connect("temporalworkflow.onrender.com:7233")
-
-        # Create or update a schedule
+        # Create a schedule for recurring execution
+        print("📅 Creating schedule for recurring execution...")
+        from temporalio.client import ScheduleIntervalSpec
+        
         await client.create_schedule(
             id="HyreMeWorkflow-schedule",
             schedule=Schedule(
@@ -47,18 +45,17 @@ async def main():
                     intervals=[ScheduleIntervalSpec(every=timedelta(minutes=5))]
                 ),
                 action=ScheduleActionStartWorkflow(
-                    "HyreMeWorkflow",  # workflow type
+                    "HyreMeWorkflow",
                     id="HyreMeWorkflow-scheduled-run",
                     task_queue="HyreMeWorkflow-task-queue",
                 ),
             ),
         )
-        print("✅ Schedule created")
+        print("✅ Schedule created: runs every 5 minutes")
+        
     except Exception as e:
-        print("❌ Failed to create schedule:", e)
-        return
-
-    print("Schedule created: runs every 5 minutes")
+        print(f"❌ Error: {e}")
+        raise
 
 
 if __name__ == "__main__":
