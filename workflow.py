@@ -1,6 +1,7 @@
 # workflow.py
 import os
 import asyncio
+import argparse
 from datetime import timedelta
 from temporalio import workflow, activity
 from temporalio.client import Client
@@ -8,6 +9,14 @@ from temporalio.worker import Worker
 
 # Import activities safely (Temporal won’t sandbox them here)
 from activities import fetch_from_mongo, fetch_from_telegram_channel, filter_with_gemini, post_jobs_to_hyreme
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='Temporal Worker')
+    parser.add_argument('--temporal-address', 
+                      default=os.getenv('TEMPORAL_ADDRESS', 'localhost:7233'),
+                      help='Temporal server address (default: localhost:7233)')
+    return parser.parse_args()
 
 
 @workflow.defn
@@ -55,12 +64,12 @@ async def main():
 
 
 async def start_worker():
-    # Get Temporal server address from environment or use default
-    temporal_address = os.getenv("TEMPORAL_ADDRESS", "localhost:7233")
-    print(f"Starting worker, connecting to Temporal server at {temporal_address}...")
+    # Parse command line arguments
+    args = parse_args()
+    print(f"Starting worker, connecting to Temporal server at {args.temporal_address}...")
     
     # Connect to the Temporal server
-    client = await Client.connect(temporal_address, namespace="default")
+    client = await Client.connect(args.temporal_address, namespace="default")
     
     # Create a worker that uses the client's connection
     worker = Worker(

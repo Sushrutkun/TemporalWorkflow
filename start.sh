@@ -2,9 +2,10 @@
 set -e
 
 # Get the port from environment variable or use default
-PORT=${PORT:-8233}
+PORT=${PORT:-10000}
+TEMPORAL_ADDRESS="0.0.0.0:7233"
 
-echo "Starting Temporal server on port $PORT..."
+echo "Starting Temporal server on $TEMPORAL_ADDRESS..."
 
 # Start Temporal dev server in background
 temporal server start-dev \
@@ -14,6 +15,9 @@ temporal server start-dev \
     --headless \
     --db-filename /tmp/temporal.db \
     --dynamic-config-value frontend.enableClientVersionCheck=false &
+
+# Export the address for child processes
+export TEMPORAL_ADDRESS=$TEMPORAL_ADDRESS
 
 # Store the PID of the temporal server
 TEMPORAL_PID=$!
@@ -32,7 +36,7 @@ echo "Temporal server started successfully"
 
 # Start worker in background
 echo "Starting worker..."
-python3 workflow.py &
+python3 workflow.py --temporal-address $TEMPORAL_ADDRESS &
 WORKER_PID=$!
 
 # Wait a bit for worker to start
@@ -40,7 +44,7 @@ sleep 5
 
 # Start client to create schedule
 echo "Starting client to create schedule..."
-python3 client.py &
+python3 client.py --temporal-address $TEMPORAL_ADDRESS &
 CLIENT_PID=$!
 
 # Function to cleanup on exit
