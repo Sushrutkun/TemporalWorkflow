@@ -11,6 +11,7 @@ from activities import fetch_from_mongo, fetch_from_telegram_channel, filter_wit
 
 @workflow.defn
 class HyreMeWorkflow:
+    print("🚀 worker started")
     @workflow.run
     async def run(self) -> list:
         data = await workflow.execute_activity(
