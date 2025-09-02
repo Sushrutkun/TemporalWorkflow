@@ -18,12 +18,11 @@ services:
         value: temporal-server.onrender.com:7233
     runtime: python
 
-  - type: cron
+  - type: worker
     name: hyreme-scheduler
     env: python
     buildCommand: pip install -r requirement.txt
     startCommand: python client.py
-    schedule: "* * * * *"
     envVars:
       - key: TEMPORAL_SERVER
         value: temporal-server.onrender.com:7233

@@ -16,22 +16,28 @@ from temporalio.client import Schedule, ScheduleSpec, ScheduleActionStartWorkflo
 
 
 async def main():
-    client = await Client.connect("temporalworkflow.onrender.com:7233")
+    print("🚀 Client started")
+    try:
+        client = await Client.connect("temporalworkflow.onrender.com:7233")
 
-    # Create or update a schedule
-    await client.create_schedule(
-        id="HyreMeWorkflow-schedule",
-        schedule=Schedule(
-            spec=ScheduleSpec(
-                intervals=[ScheduleIntervalSpec(every=timedelta(minutes=5))]
+        # Create or update a schedule
+        await client.create_schedule(
+            id="HyreMeWorkflow-schedule",
+            schedule=Schedule(
+                spec=ScheduleSpec(
+                    intervals=[ScheduleIntervalSpec(every=timedelta(minutes=5))]
+                ),
+                action=ScheduleActionStartWorkflow(
+                    "HyreMeWorkflow",  # workflow type
+                    id="HyreMeWorkflow-scheduled-run",
+                    task_queue="HyreMeWorkflow-task-queue",
+                ),
             ),
-            action=ScheduleActionStartWorkflow(
-                "HyreMeWorkflow",  # workflow type
-                id="HyreMeWorkflow-scheduled-run",
-                task_queue="HyreMeWorkflow-task-queue",
-            ),
-        ),
-    )
+        )
+        print("✅ Schedule created")
+    except Exception as e:
+        print("❌ Failed to create schedule:", e)
+        return
 
     print("Schedule created: runs every 5 minutes")
 
