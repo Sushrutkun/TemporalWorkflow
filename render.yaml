@@ -11,7 +11,7 @@ services:
     name: temporal-worker
     env: python
     plan: starter
-    buildCommand: pip install -r requirements.txt
+    buildCommand: pip install -r requirement.txt
     startCommand: python workflow.py
     envVars:
       - key: TEMPORAL_SERVER
@@ -21,7 +21,7 @@ services:
   - type: cron
     name: hyreme-scheduler
     env: python
-    buildCommand: pip install -r requirements.txt
+    buildCommand: pip install -r requirement.txt
     startCommand: python client.py
     schedule: "*/30 * * * *"
     envVars:
