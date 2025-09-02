@@ -1,7 +1,8 @@
 # workflow.py
+import os
+import asyncio
 from datetime import timedelta
-
-from temporalio import workflow
+from temporalio import workflow, activity
 from temporalio.client import Client
 from temporalio.worker import Worker
 
@@ -53,7 +54,30 @@ async def main():
     await worker.run()
 
 
-if __name__ == "__main__":
-    import asyncio
+async def start_worker():
+    # Get Temporal server address from environment or use default
+    temporal_address = os.getenv("TEMPORAL_ADDRESS", "localhost:7233")
+    print(f"Starting worker, connecting to Temporal server at {temporal_address}...")
+    
+    # Connect to the Temporal server
+    client = await Client.connect(temporal_address, namespace="default")
+    
+    # Create a worker that uses the client's connection
+    worker = Worker(
+        client,
+        task_queue="HyreMeWorkflow-task-queue",
+        workflows=[HyreMeWorkflow],
+        activities=[fetch_from_mongo, fetch_from_telegram_channel, filter_with_gemini, post_jobs_to_hyreme],
+    )
+    
+    print("✅ Worker started, waiting for work...")
+    await worker.run()
 
-    asyncio.run(main())
+if __name__ == "__main__":
+    try:
+        asyncio.run(start_worker())
+    except KeyboardInterrupt:
+        print("\nWorker shutting down...")
+    except Exception as e:
+        print(f"❌ Worker error: {e}")
+        raise

@@ -1,13 +1,19 @@
 #!/bin/sh
 set -e
 
-echo "Starting Temporal server..."
+# Get the port from environment variable or use default
+PORT=${PORT:-8233}
+
+echo "Starting Temporal server on port $PORT..."
 
 # Start Temporal dev server in background
 temporal server start-dev \
-    --ui-port ${PORT:-8233} \
+    --ip 0.0.0.0 \
+    --ui-port $PORT \
     --port 7233 \
-    --headless &
+    --headless \
+    --db-filename /tmp/temporal.db \
+    --dynamic-config-value frontend.enableClientVersionCheck=false &
 
 # Store the PID of the temporal server
 TEMPORAL_PID=$!
