@@ -23,7 +23,7 @@ services:
     env: python
     buildCommand: pip install -r requirement.txt
     startCommand: python client.py
-    schedule: "*/30 * * * *"
+    schedule: "* * * * *"
     envVars:
       - key: TEMPORAL_SERVER
         value: temporal-server.onrender.com:7233
