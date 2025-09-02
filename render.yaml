@@ -1,25 +1,10 @@
 services:
   - type: web
     name: temporal-ui
+    plan: starter
+    env: docker
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
     envVars:
       - key: PORT
         value: 8233
-
-  - type: worker
-    name: temporal-worker
-    plan: starter
-    buildCommand: pip install -r requirement.txt
-    startCommand: python workflow.py
-    envVars:
-      - key: TEMPORAL_SERVER
-        value: temporalworkflow.onrender.com:7233
-    runtime: python3
-
-  - type: worker
-    name: hyreme-scheduler
-    buildCommand: pip install -r requirement.txt
-    startCommand: python client.py
-    envVars:
-      - key: TEMPORAL_SERVER
-        value: temporalworkflow.onrender.com:7233
-    runtime: python3

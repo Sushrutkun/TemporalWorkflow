@@ -1,10 +1,19 @@
 #!/bin/sh
-# Start Temporal dev server in background
-temporal server start-dev --ip 0.0.0.0 --port 7233 &
+set -e
 
-# Wait a bit for Temporal to boot
+# Start Temporal server in background
+temporal server start \
+  --frontend-port 7233 \
+  --ui-port 8233 \
+  --disable-metrics \
+  --dynamic-config-value frontend.enableUpdateWorkflowExecution=false &
+
+# Wait a bit for server to boot
 sleep 5
 
-# Run your client/workflow code
-python3 workflow.py
-python3 client.py
+# Start worker and client in background
+python3 workflow.py &
+python3 client.py &
+
+# Keep container alive until one of them stops
+wait -n
