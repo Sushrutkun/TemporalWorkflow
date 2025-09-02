@@ -1,12 +1,10 @@
 #!/bin/sh
 set -e
 
-# Start Temporal server in background
-temporal server start \
-  --frontend-port 7233 \
-  --ui-port 8233 \
-  --disable-metrics \
-  --dynamic-config-value frontend.enableUpdateWorkflowExecution=false &
+# Start Temporal dev server in background (UI + gRPC on chosen ports)
+TEMPORAL_UI_PORT=8233 \
+TEMPORAL_CLI_ADDRESS=0.0.0.0:7233 \
+temporal server start-dev --no-metrics &
 
 # Wait a bit for server to boot
 sleep 5
@@ -15,5 +13,5 @@ sleep 5
 python3 workflow.py &
 python3 client.py &
 
-# Keep container alive until one of them stops
+# Keep container alive
 wait -n
