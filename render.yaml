@@ -1,10 +1,17 @@
 services:
   - type: web
-    name: temporal-ui
+    name: temporal-app
     plan: starter
     env: docker
     dockerfilePath: ./Dockerfile
     autoDeploy: true
+    port: 8233
+    healthCheckPath: /
     envVars:
       - key: PORT
         value: 8233
+      - key: TEMPORAL_ENVIRONMENT
+        value: production
+      - key: PYTHONUNBUFFERED
+        value: 1
+    buildCommand: echo "Building with Docker"
