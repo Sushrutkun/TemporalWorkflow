@@ -4,12 +4,9 @@ set -e
 echo "Starting Temporal server..."
 
 # Start Temporal dev server in background
-TEMPORAL_UI_PORT=${PORT:-8233} \
-TEMPORAL_CLI_ADDRESS=0.0.0.0:7233 \
 temporal server start-dev \
     --ui-port ${PORT:-8233} \
-    --frontend-address 0.0.0.0:7233 \
-    --log-level info \
+    --port 7233 \
     --headless &
 
 # Store the PID of the temporal server
