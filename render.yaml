@@ -6,3 +6,25 @@ services:
     envVars:
       - key: PORT
         value: 8233
+
+  - type: worker
+    name: temporal-worker
+    env: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: python workflow.py
+    envVars:
+      - key: TEMPORAL_SERVER
+        value: temporal-server.onrender.com:7233
+    runtime: python
+
+  - type: cron
+    name: hyreme-scheduler
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python client.py
+    schedule: "*/30 * * * *"
+    envVars:
+      - key: TEMPORAL_SERVER
+        value: temporal-server.onrender.com:7233
+    runtime: python
